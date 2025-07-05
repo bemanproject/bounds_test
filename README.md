@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 
 <!-- markdownlint-disable-next-line line-length -->
-![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg) ![Continuous Integration Tests](https://github.com/rishyak/rish.bounds_test/actions/workflows/ci_tests.yml/badge.svg) ![Lint Check (pre-commit)](https://github.com/rishyak/rish.bounds_test/actions/workflows/pre-commit.yml/badge.svg)
+![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg) ![Continuous Integration Tests](https://github.com/rishyak/rish.bounds_test/actions/workflows/ci_tests.yml/badge.svg) ![Lint Check (pre-commit)](https://github.com/rishyak/rish.bounds_test/actions/workflows/pre-commit.yml/badge.svg) ![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp29.svg)
 
 `beman.bounds_test` is a C++ library providing overflow and undefined behavior
 checking for integer operations. The library conforms to [The Beman Standard](https://github.com/bemanproject/beman/blob/main/docs/BEMAN_STANDARD.md).
