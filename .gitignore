@@ -4,6 +4,10 @@
 .settings/
 .cache/
 
+# ignore emacs temp files
+*~
+\#*\#
+
 # Miscellaneous build and testing folders
 build/
 
