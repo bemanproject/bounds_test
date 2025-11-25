@@ -10,6 +10,7 @@
 
 # Miscellaneous build and testing folders
 build/
+compile_commands.json
 
 # Loose files
 .DS_Store

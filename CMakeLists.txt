@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.28...4.2)
 
 include(cmake/bootstrap_vcpkg.cmake)
 
