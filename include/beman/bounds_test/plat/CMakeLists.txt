@@ -3,7 +3,7 @@ check_plat(HAS_GNU_OVERFLOW HAS_MSVC_OVERFLOW)
 if(HAS_GNU_OVERFLOW)
   target_include_directories(
     beman.bounds_test
-    PUBLIC
+    ${BEMAN_BOUNDS_TEST_INTERFACE}
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gnu>
   )
 # elseif(HAS_MSVC_OVERFLOW)
@@ -15,7 +15,7 @@ if(HAS_GNU_OVERFLOW)
 else()
   target_include_directories(
     beman.bounds_test
-    PUBLIC
+    ${BEMAN_BOUNDS_TEST_INTERFACE}
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/generic>
   )
 endif()

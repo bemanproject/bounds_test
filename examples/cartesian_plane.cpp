@@ -4,8 +4,12 @@
 #include <optional>
 #include <type_traits>
 
-// Alternatively: #include <beman/bounds_test/bounds_test.hpp>
+// Alternatively:
+#ifndef HAS_CXX_MODULES
+#include <beman/bounds_test/bounds_test.hpp>
+#else
 import beman.bounds_test;
+#endif
 
 namespace bt = beman::bounds_test;
 

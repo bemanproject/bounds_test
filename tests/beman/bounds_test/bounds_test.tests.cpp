@@ -4,7 +4,7 @@
 #include <tuple>
 #include <type_traits>
 
-#ifdef __INTELLISENSE__
+#ifndef HAS_CXX_MODULES
 #include <beman/bounds_test/bounds_test.hpp>
 #else
 import beman.bounds_test;
