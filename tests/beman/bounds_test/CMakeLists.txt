@@ -1,6 +1,15 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-find_package(Catch2 3 REQUIRED CONFIG)
+include(FetchContent)
+
+FetchContent_Declare(
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG v3.11.0
+    EXCLUDE_FROM_ALL
+    FIND_PACKAGE_ARGS 3
+)
+FetchContent_MakeAvailable(Catch2)
 
 add_executable(beman.bounds_test.tests)
 target_sources(beman.bounds_test.tests PRIVATE bounds_test.tests.cpp)

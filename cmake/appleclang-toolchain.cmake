@@ -16,6 +16,8 @@
 
 include_guard(GLOBAL)
 
+# Prevent PATH collision with an LLVM clang installation by using the system
+# compiler shims
 set(CMAKE_C_COMPILER cc)
 set(CMAKE_CXX_COMPILER c++)
 
