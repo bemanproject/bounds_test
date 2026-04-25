@@ -105,6 +105,8 @@ The builtin checks used by `beman.bounds_test` can be found in
 
 ## License
 
+bounds_test is licensed under the Apache License v2.0 with LLVM
+
 Source is licensed with the Apache 2.0 license with LLVM exceptions
 
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
