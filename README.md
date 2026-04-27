@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 
 <!-- markdownlint-disable-next-line line-length -->
-![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg) ![Continuous Integration Tests](https://github.com/bemanproject/bounds_test/actions/workflows/ci_tests.yml/badge.svg) ![Lint Check (pre-commit)](https://github.com/bemanproject/bounds_test/actions/workflows/pre-commit.yml/badge.svg) ![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp29.svg)
+![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg) ![Continuous Integration Tests](https://github.com/bemanproject/bounds_test/actions/workflows/ci_tests.yml/badge.svg) ![Lint Check (pre-commit)](https://github.com/bemanproject/bounds_test/actions/workflows/pre-commit-check.yml/badge.svg) [![Coverage](https://coveralls.io/repos/github/bemanproject/bounds_test/badge.svg?branch=main)](https://coveralls.io/github/bemanproject/bounds_test?branch=main) ![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp29.svg)
 
 `beman.bounds_test` is a C++ library providing overflow and undefined behavior
 checking for integer operations. The library conforms to [The Beman Standard](https://github.com/bemanproject/beman/blob/main/docs/beman_standard.md).
@@ -14,6 +14,10 @@ checking for integer operations. The library conforms to [The Beman Standard](ht
 targeted at C++29.
 
 **Status**: [Under development and not yet ready for production use.](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#under-development-and-not-yet-ready-for-production-use)
+
+## License
+
+`beman.bounds_test` is licensed under the Apache License v2.0 with LLVM Exceptions.
 
 ## Overview
 
@@ -45,6 +49,53 @@ static_assert(beman::bounds_test::can_negate(small));
 static_assert(beman::bounds_test::can_negate(big));
 ```
 
+Full runnable examples can be found in [`examples/`](examples/).
+
+## Implementation Details
+
+All provided checks are fully `constexpr`, and so have zero runtime cost where
+they can be evaluated at compile-time. For the runtime case, wherever possible
+`beman.bounds_test` delegates to compiler builtins for bounds checking.
+
+This has trivial cost on most platforms, for example `can_add()` typically
+resolves to a single [`setno`](https://www.felixcloutier.com/x86/setcc)
+instruction on x86, or is optimized out entirely in favor of a conditional jump.
+However, where compiler builtins are not available generic range-checking is
+used instead. This optimizes less well than the builtins.
+
+The builtin checks used by `beman.bounds_test` can be found in
+`cmake/check_plat.cmake`.
+
+## Dependencies
+
+### Build Environment
+
+This project requires at least the following to build:
+
+* A C++ compiler that conforms to the C++20 standard or greater
+* CMake 3.30 or later
+* (Test Only) Catch2
+
+You can disable building tests by setting CMake option `BEMAN_BOUNDS_TEST_BUILD_TESTS` to
+`OFF` when configuring the project.
+
+### Supported Platforms
+
+| Compiler | Version | C++ Standards | Standard Library  |
+|----------|---------|---------------|-------------------|
+| GCC      | 15-13   | C++26-C++20   | libstdc++         |
+| GCC      | 12-11   | C++23, C++20  | libstdc++         |
+| Clang    | 22-19   | C++26-C++20   | libstdc++, libc++ |
+| Clang    | 18      | C++26-C++20   | libc++            |
+| Clang    | 18      | C++23, C++20  | libstdc++         |
+| Clang    | 17      | C++26-C++20   | libc++            |
+| Clang    | 17      | C++20         | libstdc++         |
+| MSVC     | latest  | C++23         | MSVC STL          |
+
+## Development
+
+See the [Contributing Guidelines](CONTRIBUTING.md).
+
 ## Integrate beman.bounds_test into your project
 
 `beman.bounds_test` is available as both a header and a module. It requires
@@ -67,62 +118,90 @@ find_package(beman.bounds_test)
 target_link_libraries(<target> PRIVATE beman::bounds_test)
 ```
 
-## Building beman.bounds_test
+### Build
 
-`beman.bounds_test` has no dependencies when being built without tests, so is
-easily built via typical CMake workflows. The CMakePresets provide some
-examples, but a trivial build might be performed as follows:
+You can build bounds_test using a CMake workflow preset:
 
-```plaintext
-cmake -B build -G Ninja \
-  -DCMAKE_CXX_STANDARD=20 \
-  -DBEMAN_BOUNDS_TEST_BUILD_TESTS=OFF \
-  -DBEMAN_BOUNDS_TEST_BUILD_EXAMPLES=OFF
-
-cmake --build build
-cmake --install build --prefix <destination>
+```bash
+cmake --workflow --preset gcc-release
 ```
 
-When building tests `beman.bounds_test` relies on [Catch2](https://github.com/catchorg/Catch2)
-to provide testing infrastructure. This can be provided as part of the build
-environment, or can be provided by vcpkg as part of the build. In order to
-bootstrap vcpkg, use the `-DBEMAN_BOUNDS_TEST_BOOTSTRAP_VCPKG=ON` option.
+To list available workflow presets, you can invoke:
 
-## Implementation Details
+```bash
+cmake --list-presets=workflow
+```
 
-All provided checks are fully `constexpr`, and so have zero runtime cost where
-they can be evaluated at compile-time. For the runtime case, wherever possible
-`beman.bounds_test` delegates to compiler builtins for bounds checking.
+For details on building beman.bounds_test without using a CMake preset, refer to the
+[Contributing Guidelines](CONTRIBUTING.md).
 
-This has trivial cost on most platforms, for example `can_add()` typically
-resolves to a single [`setno`](https://www.felixcloutier.com/x86/setcc)
-instruction on x86, or is optimized out entirely in favor of a conditional jump.
-However, where compiler builtins are not available generic range-checking is
-used instead. This optimizes less well than the builtins.
+### Installation
 
-The builtin checks used by `beman.bounds_test` can be found in
-`cmake/check_plat.cmake`.
+To install beman.bounds_test globally after building with the `gcc-release` preset, you can
+run:
 
-## License
+```bash
+sudo cmake --install build/gcc-release
+```
 
-beman.bounds_test is licensed under the Apache License v2.0 with LLVM
+Alternatively, to install to a prefix, for example `/opt/beman`, you can run:
 
-Source is licensed with the Apache 2.0 license with LLVM exceptions
+```bash
+sudo cmake --install build/gcc-release --prefix /opt/beman
+```
 
-// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+This will generate the following directory structure:
 
-Documentation and associated papers are licensed with the Creative Commons
-Attribution 4.0 International license.
+```txt
+/opt/beman
+├── include
+│   └── beman
+│       └── bounds_test
+│           ├── bounds_test.hpp
+│           └── ...
+└── lib
+    ├── cmake
+    │   └── beman.bounds_test
+    │       ├── beman.bounds_test-config-version.cmake
+    │       ├── beman.bounds_test-config.cmake
+    │       ├── beman.bounds_test-targets-debug.cmake
+    │       └── beman.bounds_test-targets.cmake
+    └── libbeman.bounds_test.a
+```
 
-// SPDX-License-Identifier: CC-BY-4.0
+### CMake Configuration
 
-The intent is that the source and documentation are available for use by people
-how they wish.
+If you installed beman.bounds_test to a prefix, you can specify that prefix to your CMake
+project using `CMAKE_PREFIX_PATH`; for example, `-DCMAKE_PREFIX_PATH=/opt/beman`.
 
-The README itself is licensed with CC0 1.0 Universal. Copy the contents and
-incorporate in your own work as you see fit.
+You need to bring in the `beman.bounds_test` package to define the `beman::bounds_test` CMake
+target:
 
-// SPDX-License-Identifier: CC0-1.0
+```cmake
+find_package(beman.bounds_test REQUIRED)
+```
+
+You will then need to add `beman::bounds_test` to the link libraries of any libraries or
+executables that include `beman.bounds_test` headers.
+
+```cmake
+target_link_libraries(yourlib PUBLIC beman::bounds_test)
+```
+
+### Using beman.bounds_test
+
+To use `beman.bounds_test` in your C++ project,
+include an appropriate `beman.bounds_test` header from your source code.
+
+```c++
+#include <beman/bounds_test/bounds_test.hpp>
+```
+
+> [!NOTE]
+>
+> `beman.bounds_test` headers are to be included with the `beman/bounds_test/` prefix.
+> Altering include search paths to spell the include target another way (e.g.
+> `#include <bounds_test.hpp>`) is unsupported.
 
 ## Contributing
 

@@ -1,15 +1,12 @@
-# IDE and development folders
-.vscode/
-.idea/
-.settings/
-.cache/
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+/.cache
+/compile_commands.json
+/build
 
 # ignore emacs temp files
 *~
 \#*\#
 
-# Miscellaneous build and testing folders
-build/
-
-# Loose files
-.DS_Store
+# ignore vscode settings
+.vscode

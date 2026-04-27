@@ -20,10 +20,7 @@ include_guard(GLOBAL)
 set(CMAKE_C_COMPILER cl)
 set(CMAKE_CXX_COMPILER cl)
 
-# Off until I figure out how I want to handle vcpkg (dependencies also need to
-# be built with address sanitizer)
-# if(BEMAN_BUILDSYS_SANITIZER STREQUAL "MaxSan")
-if(OFF)
+if(BEMAN_BUILDSYS_SANITIZER STREQUAL "MaxSan")
     # /Zi flag (add debug symbol) is needed when using address sanitizer
     # See C5072: https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-c5072
     set(SANITIZER_FLAGS "/fsanitize=address /Zi")
@@ -39,3 +36,6 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO_INIT "${RELEASE_FLAGS}")
 
 set(CMAKE_C_FLAGS_RELEASE_INIT "${RELEASE_FLAGS}")
 set(CMAKE_CXX_FLAGS_RELEASE_INIT "${RELEASE_FLAGS}")
+
+# Add this dir to the module path so that `find_package(beman-install-library)` works
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}")
