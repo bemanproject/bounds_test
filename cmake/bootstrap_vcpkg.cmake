@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 option(BEMAN_BOUNDS_TEST_BOOTSTRAP_VCPKG "Bootstrap vcpkg if no other toolchain exists" OFF)
 
 if(BEMAN_BOUNDS_TEST_BOOTSTRAP_VCPKG AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)

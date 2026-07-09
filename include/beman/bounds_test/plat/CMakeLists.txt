@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 check_plat(HAS_GNU_OVERFLOW HAS_MSVC_OVERFLOW)
 
 if(HAS_GNU_OVERFLOW)

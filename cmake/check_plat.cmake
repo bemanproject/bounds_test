@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 function(check_plat HAS_GNU_VAR HAS_MSVC_VAR)
   include(CheckSourceCompiles)
   set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
