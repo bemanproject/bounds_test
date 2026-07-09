@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 include(${CMAKE_CURRENT_LIST_DIR}/beman.bounds_test-targets.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/check_plat.cmake)
 
