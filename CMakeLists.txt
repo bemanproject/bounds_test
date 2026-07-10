@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.28...4.4)
 
 include(cmake/bootstrap_vcpkg.cmake)
 
@@ -7,7 +7,7 @@ project(
     beman.bounds_test
     DESCRIPTION "A library for checking integer operation boundary conditions"
     LANGUAGES CXX
-    VERSION 0.0.1
+    VERSION 0.1.0
 )
 
 # [CMAKE.SKIP_TESTS]
