@@ -67,6 +67,22 @@ find_package(beman.bounds_test)
 target_link_libraries(<target> PRIVATE beman::bounds_test)
 ```
 
+## Dependencies
+
+### Build Environment
+
+This project requires at least the following to build:
+
+* A C++ compiler that conforms to the C++20 standard or greater
+* CMake 3.30 or later
+* (Test Only) Catch2
+
+You can disable building tests by setting CMake option `BEMAN_BOUNDS_TEST_BUILD_TESTS` to
+`OFF` when configuring the project.
+
+You can disable building examples by setting CMake option `BEMAN_BOUNDS_TEST_BUILD_EXAMPLES` to
+`OFF` when configuring the project.
+
 ## Building beman.bounds_test
 
 `beman.bounds_test` has no dependencies when being built without tests, so is
