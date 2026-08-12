@@ -4,58 +4,33 @@ name: Continuous Integration Tests
 
 on:
   push:
+    branches:
+      - main
   pull_request:
   workflow_dispatch:
   schedule:
-    - cron: "30 15 * * *"
+    - cron: '30 15 * * 6'
+
+concurrency:
+  group: ${{format('{0}:{1}', github.repository, github.ref)}}
+  cancel-in-progress: true
 
 jobs:
+  beman-submodule-check:
+    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-submodule-check.yml@1.7.4
+
   preset-test:
-    permissions:
-      actions: read
-    strategy:
-      fail-fast: false
-      matrix:
-        presets:
-          - preset: "gcc-debug"
-            compiler: "gcc:14"
-          - preset: "gcc-release"
-            compiler: "gcc:14"
-          - preset: "llvm-debug"
-            compiler: "clang:19"
-          - preset: "llvm-release"
-            compiler: "clang:19"
-          # - preset: "appleclang-debug"
-          #   platform: "macos-latest"
-          # - preset: "appleclang-release"
-          #   platform: "macos-latest"
-          - preset: "msvc-debug"
-            platform: "windows-latest"
-          - preset: "msvc-release"
-            platform: "windows-latest"
-    name: "Preset: ${{ matrix.presets.preset }} on ${{ matrix.presets.platform || matrix.presets.compiler }}"
-    runs-on: ${{ matrix.presets.platform || 'ubuntu-latest' }}
-    container:
-      image: ${{ matrix.presets.compiler && 'ghcr.io/bemanproject/testingcontainers-' }}${{ matrix.presets.compiler }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Environment
-        if: ${{ !matrix.presets.compiler }}
-        uses: ./.github/actions/setup-environment
-      - name: Get vcpkg deps
-        shell: bash
-        if: ${{ !contains(runner.os, 'Windows') }}
-        run: |
-          sudo apt-get install -y pkg-config zip
-      - name: Restore vcpkg cache
-        id: vcpkg-cache
-        uses: TAServers/vcpkg-cache@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Run preset
-        env:
-          VCPKG_BINARY_SOURCES: "clear;files,${{ steps.vcpkg-cache.outputs.path }},readwrite"
-        run: cmake --workflow --preset ${{ matrix.presets.preset }}
+    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-preset-test.yml@1.7.4
+    with:
+      matrix_config: >
+        [
+          {"preset": "gcc-debug", "image": "ghcr.io/bemanproject/infra-containers-gcc:latest"},
+          {"preset": "gcc-release", "image": "ghcr.io/bemanproject/infra-containers-gcc:latest"},
+          {"preset": "llvm-debug", "image": "ghcr.io/bemanproject/infra-containers-clang:latest"},
+          {"preset": "llvm-release", "image": "ghcr.io/bemanproject/infra-containers-clang:latest"},
+          {"preset": "msvc-debug", "runner": "windows-latest"},
+          {"preset": "msvc-release", "runner": "windows-latest"}
+        ]
 
   catch-test:
     permissions:
@@ -188,28 +163,6 @@ jobs:
           toolchain_file: ${{ matrix.compilers.toolchain }}
 
   create-issue-when-fault:
-    runs-on: ubuntu-latest
     needs: [preset-test, catch-test, configuration-test, compiler-test]
     if: failure() && github.event_name == 'schedule'
-    steps:
-      # See https://github.com/cli/cli/issues/5075
-      - uses: actions/checkout@v4
-      - name: Create issue
-        run: |
-          issue_num=$(gh issue list -s open -S "[SCHEDULED-BUILD] Build & Test failure" -L 1 --json number | jq 'if length == 0 then -1 else .[0].number end')
-
-          body="**Build-and-Test Failure Report**
-          - **Time of Failure**: $(date -u '+%B %d, %Y, %H:%M %Z')
-          - **Commit**: [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
-          - **Action Run**: [View logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-
-          The scheduled build-and-test triggered by cron has failed.
-          Please investigate the logs and recent changes associated with this commit or rerun the workflow if you believe this is an error."
-
-          if [[ $issue_num -eq -1 ]]; then
-            gh issue create --repo ${{ github.repository }} --title "[SCHEDULED-BUILD] Build & Test failure" --body "$body"
-          else
-            gh issue comment --repo ${{ github.repository }} $issue_num --body "$body"
-          fi
-        env:
-          GH_TOKEN: ${{ github.token }}
+    uses: bemanproject/infra-workflows/.github/workflows/reusable-beman-create-issue-when-fault.yml@1.7.4

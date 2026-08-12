@@ -103,6 +103,7 @@
         "_debug-base"
       ],
       "cacheVariables": {
+        "BEMAN_BUILDSYS_SANITIZER": "",
         "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/infra/cmake/msvc-toolchain.cmake"
       },
       "condition": {

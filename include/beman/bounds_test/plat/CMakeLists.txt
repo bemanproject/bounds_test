@@ -19,6 +19,8 @@ else()
     )
 endif()
 
+include(GNUInstallDirs)
+
 install(
     DIRECTORY generic gnu msvc
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/beman/bounds_test/plat
