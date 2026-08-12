@@ -48,12 +48,19 @@ target_sources(
             FILES include/beman/bounds_test/beman.bounds_test.cppm
 )
 
+include(GNUInstallDirs)
 include(cmake/check_plat.cmake)
 
 add_subdirectory(include/beman/bounds_test/plat)
 
 include(infra/cmake/beman-install-library.cmake)
 beman_install_library(${PROJECT_NAME} TARGETS beman.bounds_test)
+
+# install(
+#     FILES cmake/beman.bounds_test-config.cmake cmake/check_plat.cmake
+#     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman.bounds_test
+#     COMPONENT bounds_test_Development
+# )
 
 if(BEMAN_BOUNDS_TEST_BUILD_TESTS)
     include(CTestUseLaunchers)

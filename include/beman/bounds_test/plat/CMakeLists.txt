@@ -24,5 +24,5 @@ include(GNUInstallDirs)
 install(
     DIRECTORY generic gnu msvc
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/beman/bounds_test/plat
-    COMPONENT beman.bounds_test
+    COMPONENT bounds_test_Development
 )
