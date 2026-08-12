@@ -9,24 +9,30 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
 get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
 get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
 if(_IMPORT_PREFIX STREQUAL "/")
-  set(_IMPORT_PREFIX "")
+    set(_IMPORT_PREFIX "")
 endif()
 
 if(HAS_GNU_OVERFLOW)
-  set_property(TARGET beman::bounds_test
-    APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
-      "${_IMPORT_PREFIX}/include/beman/bounds_test/plat/gnu"
-  )
-# elseif(HAS_MSVC_OVERFLOW)
-#   set_property(TARGET beman::bounds_test
-#     APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
-#       "${_IMPORT_PREFIX}/include/beman/bounds_test/plat/msvc"
-#   )
+    set_property(
+        TARGET beman::bounds_test
+        APPEND
+        PROPERTY
+            INTERFACE_INCLUDE_DIRECTORIES
+                "${_IMPORT_PREFIX}/include/beman/bounds_test/plat/gnu"
+    )
+    # elseif(HAS_MSVC_OVERFLOW)
+    #   set_property(TARGET beman::bounds_test
+    #     APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+    #       "${_IMPORT_PREFIX}/include/beman/bounds_test/plat/msvc"
+    #   )
 else()
-  set_property(TARGET beman::bounds_test
-    APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
-      "${_IMPORT_PREFIX}/include/beman/bounds_test/plat/generic"
-  )
+    set_property(
+        TARGET beman::bounds_test
+        APPEND
+        PROPERTY
+            INTERFACE_INCLUDE_DIRECTORIES
+                "${_IMPORT_PREFIX}/include/beman/bounds_test/plat/generic"
+    )
 endif()
 
 set(_IMPORT_PREFIX)
