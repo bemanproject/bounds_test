@@ -30,6 +30,10 @@ option(
     ${PROJECT_IS_TOP_LEVEL}
 )
 
+# Neither of these two are technically needed, but they make the expectation clear
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 add_library(beman.bounds_test)
 add_library(beman::bounds_test ALIAS beman.bounds_test)
 
