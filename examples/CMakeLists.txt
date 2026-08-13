@@ -21,7 +21,11 @@ function(add_bounds_test_example NAME)
         beman.bounds_test.examples.${NAME}
         PRIVATE beman::bounds_test
     )
+    add_test(
+        NAME beman.bounds_test.examples.${NAME}
+        COMMAND beman.bounds_test.examples.${NAME}
+    )
 endfunction()
 
-add_bounds_test_example(placeholder)
+# FIXME: add_bounds_test_example(placeholder)
 add_bounds_test_example(cartesian_plane)

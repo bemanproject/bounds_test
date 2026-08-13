@@ -21,8 +21,10 @@ endif()
 
 include(GNUInstallDirs)
 
-install(
-    DIRECTORY generic gnu msvc
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/beman/bounds_test/plat
-    COMPONENT bounds_test_Development
-)
+if(BEMAN_BOUNDS_TEST_INSTALL_CONFIG_FILE_PACKAGE)
+    install(
+        DIRECTORY generic gnu msvc
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/beman/bounds_test/plat
+        COMPONENT bounds_test_Development
+    )
+endif()

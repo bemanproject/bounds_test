@@ -20,7 +20,10 @@ endif()
 #======================================================================
 # NOTE: Only for Release build with enabled install rules useful! CK
 #======================================================================
-if(BEMAN_BOUNDS_TEST_INSTALL_CONFIG_FILE_PACKAGE AND NOT CMAKE_SKIP_INSTALL_RULES)
+if(
+    BEMAN_BOUNDS_TEST_INSTALL_CONFIG_FILE_PACKAGE
+    AND NOT CMAKE_SKIP_INSTALL_RULES
+)
     # test if the targets are usable from the install directory
     add_test(
         NAME install-to-stagedir

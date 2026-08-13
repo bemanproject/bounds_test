@@ -24,8 +24,16 @@ option(
     ${PROJECT_IS_TOP_LEVEL}
 )
 
+option(
+    BEMAN_BOUNDS_TEST_INSTALL_CONFIG_FILE_PACKAGE
+    "Enable creating and installing a CMake config-file package. Default: ${PROJECT_IS_TOP_LEVEL}. Values: { ON, OFF }."
+    ${PROJECT_IS_TOP_LEVEL}
+)
+
 add_library(beman.bounds_test)
 add_library(beman::bounds_test ALIAS beman.bounds_test)
+
+target_compile_features(beman.bounds_test PUBLIC cxx_std_20)
 
 set_target_properties(
     beman.bounds_test
@@ -42,7 +50,6 @@ target_sources(
             FILES
                 include/beman/bounds_test/bounds_test.hpp
                 include/beman/bounds_test/plat/common.hpp
-    PUBLIC
         FILE_SET CXX_MODULES
             BASE_DIRS include
             FILES include/beman/bounds_test/beman.bounds_test.cppm
@@ -56,11 +63,13 @@ add_subdirectory(include/beman/bounds_test/plat)
 include(infra/cmake/beman-install-library.cmake)
 beman_install_library(${PROJECT_NAME} TARGETS beman.bounds_test)
 
-# install(
-#     FILES cmake/beman.bounds_test-config.cmake cmake/check_plat.cmake
-#     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman.bounds_test
-#     COMPONENT bounds_test_Development
-# )
+if(BEMAN_BOUNDS_TEST_INSTALL_CONFIG_FILE_PACKAGE)
+    install(
+        FILES cmake/beman.bounds_test-config.cmake cmake/check_plat.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman.bounds_test
+        COMPONENT bounds_test_Development
+    )
+endif()
 
 if(BEMAN_BOUNDS_TEST_BUILD_TESTS)
     include(CTestUseLaunchers)
