@@ -32,7 +32,14 @@ option(
 
 # Neither of these two are technically needed, but they make the expectation clear
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if(MSVC)
+    set(BEMAN_BUILDSYS_SANITIZER "")
+    if(CMAKE_CXX_STANDARD EQUAL 26)
+        set(CMAKE_CXX_STANDARD_REQUIRED OFF)
+    endif()
+else()
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
 
 add_library(beman.bounds_test)
 add_library(beman::bounds_test ALIAS beman.bounds_test)
