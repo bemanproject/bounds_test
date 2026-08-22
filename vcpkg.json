@@ -1,6 +1,6 @@
 {
   "name": "beman-bounds-test",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A library for checking integer operation boundary conditions",
   "maintainers": [
     "Rishyak Panchal <hello@rishyak.com>",
@@ -13,7 +13,7 @@
   "vcpkg-configuration": {
     "default-registry": {
       "kind": "git",
-      "baseline": "7e21420f775f72ae938bdeb5e6068f722088f06a",
+      "baseline": "9e593bb18ea69cc5095e012465dcd675a822ed0d",
       "repository": "https://github.com/microsoft/vcpkg.git"
     }
   }

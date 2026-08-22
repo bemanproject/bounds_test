@@ -2,30 +2,29 @@
 check_plat(HAS_GNU_OVERFLOW HAS_MSVC_OVERFLOW)
 
 if(HAS_GNU_OVERFLOW)
-  target_include_directories(
-    beman.bounds_test
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gnu>
-  )
-# elseif(HAS_MSVC_OVERFLOW)
-#   target_include_directories(
-#     beman.bounds_test
-#     PUBLIC
-#         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msvc>
-#   )
+    target_include_directories(
+        beman.bounds_test
+        PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gnu>
+    )
+    # elseif(HAS_MSVC_OVERFLOW)
+    #   target_include_directories(
+    #     beman.bounds_test
+    #     PUBLIC
+    #         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msvc>
+    #   )
 else()
-  target_include_directories(
-    beman.bounds_test
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/generic>
-  )
+    target_include_directories(
+        beman.bounds_test
+        PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/generic>
+    )
 endif()
 
-install(
-    DIRECTORY
-        generic
-        gnu
-        msvc
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/beman/bounds_test/plat
-    COMPONENT beman.bounds_test
-)
+include(GNUInstallDirs)
+
+if(BEMAN_BOUNDS_TEST_INSTALL_CONFIG_FILE_PACKAGE)
+    install(
+        DIRECTORY generic gnu msvc
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/beman/bounds_test/plat
+        COMPONENT bounds_test_Development
+    )
+endif()

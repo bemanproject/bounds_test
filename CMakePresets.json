@@ -8,13 +8,28 @@
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
         "CMAKE_CXX_STANDARD": "20",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "BEMAN_BOUNDS_TEST_BOOTSTRAP_VCPKG": "ON"
+        "CMAKE_CXX_EXTENSIONS": false,
+        "CMAKE_CXX_STANDARD_REQUIRED": true,
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+        "CMAKE_INSTALL_MESSAGE": "LAZY",
+        "CMAKE_SKIP_TEST_ALL_DEPENDENCY": false,
+        "BEMAN_BOUNDS_TEST_BOOTSTRAP_VCPKG": true
       }
     },
     {
       "name": "_debug-base",
       "hidden": true,
+      "warnings": {
+        "dev": true,
+        "deprecated": true,
+        "uninitialized": true,
+        "unusedCli": true,
+        "systemVars": false
+      },
+      "errors": {
+        "dev": false,
+        "deprecated": false
+      },
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "BEMAN_BUILDSYS_SANITIZER": "MaxSan"
@@ -35,7 +50,7 @@
         "_debug-base"
       ],
       "cacheVariables": {
-        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/cmake/gnu-toolchain.cmake"
+        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/infra/cmake/gnu-toolchain.cmake"
       }
     },
     {
@@ -46,7 +61,7 @@
         "_release-base"
       ],
       "cacheVariables": {
-        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/cmake/gnu-toolchain.cmake"
+        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/infra/cmake/gnu-toolchain.cmake"
       }
     },
     {
@@ -57,7 +72,7 @@
         "_debug-base"
       ],
       "cacheVariables": {
-        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/cmake/llvm-toolchain.cmake"
+        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/infra/cmake/llvm-toolchain.cmake"
       }
     },
     {
@@ -68,29 +83,31 @@
         "_release-base"
       ],
       "cacheVariables": {
-        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/cmake/llvm-toolchain.cmake"
+        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/infra/cmake/llvm-toolchain.cmake"
       }
     },
     {
       "name": "appleclang-debug",
+      "hidden": true,
       "displayName": "Appleclang Debug Build",
       "inherits": [
         "_root-config",
         "_debug-base"
       ],
       "cacheVariables": {
-        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/cmake/appleclang-toolchain.cmake"
+        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/infra/cmake/appleclang-toolchain.cmake"
       }
     },
     {
       "name": "appleclang-release",
+      "hidden": true,
       "displayName": "Appleclang Release Build",
       "inherits": [
         "_root-config",
         "_release-base"
       ],
       "cacheVariables": {
-        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/cmake/appleclang-toolchain.cmake"
+        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/infra/cmake/appleclang-toolchain.cmake"
       }
     },
     {
@@ -101,7 +118,14 @@
         "_debug-base"
       ],
       "cacheVariables": {
-        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/cmake/msvc-toolchain.cmake"
+        "BEMAN_BUILDSYS_SANITIZER": "",
+        "CMAKE_CXX_STANDARD_REQUIRED": false,
+        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/infra/cmake/msvc-toolchain.cmake"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     },
     {
@@ -112,7 +136,13 @@
         "_release-base"
       ],
       "cacheVariables": {
-        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/cmake/msvc-toolchain.cmake"
+        "CMAKE_CXX_STANDARD_REQUIRED": false,
+        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/infra/cmake/msvc-toolchain.cmake"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     }
   ],
@@ -120,7 +150,11 @@
     {
       "name": "_root-build",
       "hidden": true,
-      "jobs": 0
+      "jobs": 0,
+      "targets": [
+        "all_verify_interface_header_sets",
+        "all"
+      ]
     },
     {
       "name": "gcc-debug",

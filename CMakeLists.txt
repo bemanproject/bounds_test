@@ -30,31 +30,40 @@ option(
     ${PROJECT_IS_TOP_LEVEL}
 )
 
+# Neither of these two are technically needed, but they make the expectation clear
+set(CMAKE_CXX_EXTENSIONS OFF)
+if(MSVC)
+    set(BEMAN_BUILDSYS_SANITIZER "")
+    if(CMAKE_CXX_STANDARD EQUAL 26)
+        set(CMAKE_CXX_STANDARD_REQUIRED OFF)
+    endif()
+else()
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
+
 add_library(beman.bounds_test)
 add_library(beman::bounds_test ALIAS beman.bounds_test)
+
+target_compile_features(beman.bounds_test PUBLIC cxx_std_20)
 
 set_target_properties(
     beman.bounds_test
     PROPERTIES
-        VERIFY_INTERFACE_HEADER_SETS ON
+        VERIFY_INTERFACE_HEADER_SETS ${PROJECT_IS_TOP_LEVEL}
         EXPORT_NAME bounds_test
 )
 
 target_sources(
     beman.bounds_test
-
     PUBLIC
         FILE_SET HEADERS
-        BASE_DIRS include
-        FILES
-            include/beman/bounds_test/bounds_test.hpp
-            include/beman/bounds_test/plat/common.hpp
-
-    PUBLIC
+            BASE_DIRS include
+            FILES
+                include/beman/bounds_test/bounds_test.hpp
+                include/beman/bounds_test/plat/common.hpp
         FILE_SET CXX_MODULES
-        BASE_DIRS include
-        FILES
-            include/beman/bounds_test/beman.bounds_test.cppm
+            BASE_DIRS include
+            FILES include/beman/bounds_test/beman.bounds_test.cppm
 )
 
 include(GNUInstallDirs)
@@ -62,40 +71,14 @@ include(cmake/check_plat.cmake)
 
 add_subdirectory(include/beman/bounds_test/plat)
 
-install(
-    TARGETS beman.bounds_test
-    EXPORT beman.bounds_test-targets
-    COMPONENT beman.bounds_test
-
-    FILE_SET CXX_MODULES
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-
-    FILE_SET HEADERS
-)
+include(infra/cmake/beman-install-library.cmake)
+beman_install_library(${PROJECT_NAME} TARGETS beman.bounds_test)
 
 if(BEMAN_BOUNDS_TEST_INSTALL_CONFIG_FILE_PACKAGE)
-    include(CMakePackageConfigHelpers)
-
-    write_basic_package_version_file(
-        ${CMAKE_CURRENT_BINARY_DIR}/beman.bounds_test-config-version.cmake
-        COMPATIBILITY ExactVersion
-    )
-
     install(
-        FILES
-            cmake/beman.bounds_test-config.cmake
-            cmake/check_plat.cmake
-            ${CMAKE_CURRENT_BINARY_DIR}/beman.bounds_test-config-version.cmake
+        FILES cmake/beman.bounds_test-config.cmake cmake/check_plat.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman.bounds_test
-        COMPONENT beman.bounds_test
-    )
-
-    install(
-        EXPORT beman.bounds_test-targets
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman.bounds_test
-        NAMESPACE beman::
-        CXX_MODULES_DIRECTORY cxx-modules
-        COMPONENT beman.bounds_test
+        COMPONENT bounds_test_Development
     )
 endif()
 
