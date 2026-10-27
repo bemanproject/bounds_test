@@ -148,12 +148,6 @@ jobs:
           - class: clang
             version: 19
             toolchain: "infra/cmake/llvm-toolchain.cmake"
-          - class: clang
-            version: 18
-            toolchain: "infra/cmake/llvm-toolchain.cmake"
-          - class: clang
-            version: 17
-            toolchain: "infra/cmake/llvm-toolchain.cmake"
     name: "Compiler: ${{ matrix.compilers.class }} ${{ matrix.compilers.version }}"
     runs-on: ubuntu-24.04
     container:
